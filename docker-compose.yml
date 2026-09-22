@@ -1,0 +1,35 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: oficina_db
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: oficina_api_user
+      MYSQL_PASSWORD: 123
+      MYSQL_DATABASE: oficina
+    ports:
+      - "3306:3306"
+    volumes:
+      - dados_oficina:/var/lib/mysql
+      - ./database/001.sql:/docker-entrypoint-initdb.d/001.sql:ro
+
+  api:
+    build: ./backend
+    image: oficina_api
+    container_name: oficina_api_container
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db
+
+  app:
+    build: ./frontend
+    image: oficina-app
+    container_name: oficina-app-container
+    ports:
+      - "5173:5173"
+    depends_on:
+      - api
+
+volumes:
+  dados_oficina:

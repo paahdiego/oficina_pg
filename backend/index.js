@@ -1,8 +1,11 @@
 import express from 'express'
 import mysql from 'mysql2/promise'
 import cors from 'cors'
+import dotenv from 'dotenv'
 
-const port = 3000
+dotenv.config()
+
+const port = process.env.PORT
 
 const app = express()
 
@@ -26,11 +29,10 @@ INNER JOIN cliente c ON os.cliente_id = c.id ORDER BY os.data_de_orcamento desc;
 `
 
 const connection = mysql.createPool({
-  host: 'db',
-  user: 'oficina_api_user',
-  password: '123',
-  database: "oficina",
-  charset: 'utf8mb4'
+  host: process.env.DB_HOST,
+  user: process.env.DB_USER,
+  password: process.env.DB_PASSWORD,
+  database: process.env.DB_NAME,
 })
 
 app.get('/', (req, res) => {
